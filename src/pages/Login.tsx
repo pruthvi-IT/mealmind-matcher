@@ -3,13 +3,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ThemeSupa } from '@supabase/auth-ui-shared'
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check authentication status and redirect if logged in
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session);
       if (session) {
         navigate("/home");
       }

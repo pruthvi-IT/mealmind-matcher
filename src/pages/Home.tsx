@@ -4,23 +4,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 
 // Mock food recommendations - can be replaced with real algorithm later
 const mockRecommendations = [
-  { id: 1, name: "Grilled Salmon", description: "Fresh salmon with herbs" },
-  { id: 2, name: "Quinoa Bowl", description: "Healthy grain bowl with vegetables" },
-  { id: 3, name: "Chicken Stir-Fry", description: "Asian-inspired chicken with vegetables" },
-  { id: 4, name: "Mediterranean Salad", description: "Fresh salad with feta and olives" },
+  { id: 1, name: "Grilled Salmon", description: "Fresh salmon with herbs and lemon" },
+  { id: 2, name: "Quinoa Bowl", description: "Healthy grain bowl with roasted vegetables" },
+  { id: 3, name: "Chicken Stir-Fry", description: "Asian-inspired chicken with seasonal vegetables" },
+  { id: 4, name: "Mediterranean Salad", description: "Fresh salad with feta, olives, and vinaigrette" },
 ];
 
 const Home = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [recommendations, setRecommendations] = useState(mockRecommendations);
+  const [recommendations] = useState(mockRecommendations);
 
+  // Check authentication on page load
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      console.log("Checking user session:", session);
       if (!session) {
         navigate("/");
       }
@@ -28,11 +31,33 @@ const Home = () => {
     checkUser();
   }, [navigate]);
 
+  // Fetch user's orders
+  const { data: orders } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching orders:", error);
+        throw error;
+      }
+      
+      return data;
+    },
+  });
+
   const handleOrder = async (foodItem: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      if (!session?.user) {
+        console.log("No user session found");
+        return;
+      }
 
+      console.log("Placing order for:", foodItem);
       const { error } = await supabase
         .from('orders')
         .insert([{ food_item: foodItem, user_id: session.user.id }]);
@@ -83,6 +108,24 @@ const Home = () => {
             </Card>
           ))}
         </div>
+
+        {orders && orders.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">Your Recent Orders</h2>
+            <div className="space-y-2">
+              {orders.map((order) => (
+                <Card key={order.id}>
+                  <CardContent className="py-4">
+                    <p>{order.food_item}</p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(order.created_at).toLocaleDateString()}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
