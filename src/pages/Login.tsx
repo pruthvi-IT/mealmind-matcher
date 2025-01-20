@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Login = () => {
           <Auth
             supabaseClient={supabase}
             appearance={{
-              theme: 'light',
+              theme: ThemeSupa,
               style: {
                 button: {
                   background: 'hsl(var(--primary))',
