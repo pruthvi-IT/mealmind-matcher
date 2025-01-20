@@ -6,12 +6,32 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 
-// Mock food recommendations - can be replaced with real algorithm later
+// Mock food recommendations with images
 const mockRecommendations = [
-  { id: 1, name: "Grilled Salmon", description: "Fresh salmon with herbs and lemon" },
-  { id: 2, name: "Quinoa Bowl", description: "Healthy grain bowl with roasted vegetables" },
-  { id: 3, name: "Chicken Stir-Fry", description: "Asian-inspired chicken with seasonal vegetables" },
-  { id: 4, name: "Mediterranean Salad", description: "Fresh salad with feta, olives, and vinaigrette" },
+  { 
+    id: 1, 
+    name: "Grilled Salmon", 
+    description: "Fresh salmon with herbs and lemon",
+    image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 2, 
+    name: "Quinoa Bowl", 
+    description: "Healthy grain bowl with roasted vegetables",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 3, 
+    name: "Chicken Stir-Fry", 
+    description: "Asian-inspired chicken with seasonal vegetables",
+    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 4, 
+    name: "Mediterranean Salad", 
+    description: "Fresh salad with feta, olives, and vinaigrette",
+    image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80"
+  },
 ];
 
 const Home = () => {
@@ -95,7 +115,14 @@ const Home = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {recommendations.map((item) => (
-            <Card key={item.id}>
+            <Card key={item.id} className="overflow-hidden">
+              <div className="relative h-48 w-full">
+                <img 
+                  src={item.image} 
+                  alt={item.name}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
               <CardHeader>
                 <CardTitle>{item.name}</CardTitle>
               </CardHeader>
