@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { History, LogOut } from "lucide-react";
 
-// Updated food items with verified working images
+// Food items with correctly matched images
 const mockRecommendations = [
   { 
     id: 1, 
     name: "Butter Chicken", 
     description: "Creamy, rich curry with tender chicken",
-    image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 2, 
@@ -40,33 +40,33 @@ const mockRecommendations = [
   },
   { 
     id: 6, 
+    name: "Naan", 
+    description: "Traditional Indian flatbread",
+    image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 7, 
+    name: "Chicken Tikka", 
+    description: "Grilled marinated chicken pieces",
+    image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 8, 
+    name: "Masala Dosa", 
+    description: "Crispy rice crepe with spiced potato filling",
+    image: "https://images.unsplash.com/photo-1625398407796-82650a8c9285?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 9, 
     name: "Palak Paneer", 
     description: "Cottage cheese in spinach gravy",
     image: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=800&q=80"
   },
   { 
-    id: 7, 
-    name: "Chole Bhature", 
-    description: "Spiced chickpeas with fried bread",
-    image: "https://images.unsplash.com/photo-1626132647523-66c6bc3f6d2f?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 8, 
-    name: "Dosa", 
-    description: "Crispy rice crepe with potato filling",
-    image: "https://images.unsplash.com/photo-1625398407796-82650a8c9285?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
-    id: 9, 
-    name: "Gulab Jamun", 
-    description: "Sweet milk dumplings in sugar syrup",
-    image: "https://images.unsplash.com/photo-1582716401301-b2407dc7563d?auto=format&fit=crop&w=800&q=80"
-  },
-  { 
     id: 10, 
-    name: "Tandoori Roti", 
-    description: "Whole wheat bread baked in clay oven",
-    image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80"
+    name: "Mixed Vegetable Curry", 
+    description: "Assorted vegetables in aromatic curry sauce",
+    image: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
