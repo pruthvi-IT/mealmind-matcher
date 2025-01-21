@@ -4,9 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { History } from "lucide-react";
+import { History, LogOut } from "lucide-react";
 
-// Mock food recommendations with Indian food images
 const mockRecommendations = [
   { 
     id: 1, 
@@ -116,25 +115,37 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Indian Cuisine</h1>
-          <div className="flex gap-4">
-            <Button 
-              onClick={() => navigate("/recent-orders")}
-              className="flex items-center gap-2"
-            >
-              <History className="h-4 w-4" />
-              Recent Orders
-            </Button>
-            <Button variant="outline" onClick={handleSignOut}>
-              Sign Out
-            </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* AppBar */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-primary">Food Buddy</h1>
+            <div className="flex gap-4">
+              <Button 
+                variant="outline"
+                onClick={() => navigate("/recent-orders")}
+                className="flex items-center gap-2"
+              >
+                <History className="h-4 w-4" />
+                Recent Orders
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={handleSignOut}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {recommendations.map((item) => (
             <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative h-40 w-full">
