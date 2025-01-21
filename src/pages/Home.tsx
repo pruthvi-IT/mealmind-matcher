@@ -1,37 +1,73 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery } from "@tanstack/react-query";
+import { History } from "lucide-react";
 
-// Mock food recommendations with images
+// Mock food recommendations with Indian food images
 const mockRecommendations = [
   { 
     id: 1, 
-    name: "Grilled Salmon", 
-    description: "Fresh salmon with herbs and lemon",
-    image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=80"
+    name: "Butter Chicken", 
+    description: "Creamy, rich curry with tender chicken",
+    image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 2, 
-    name: "Quinoa Bowl", 
-    description: "Healthy grain bowl with roasted vegetables",
-    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80"
+    name: "Paneer Tikka", 
+    description: "Grilled cottage cheese with spices",
+    image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 3, 
-    name: "Chicken Stir-Fry", 
-    description: "Asian-inspired chicken with seasonal vegetables",
-    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=800&q=80"
+    name: "Biryani", 
+    description: "Fragrant rice dish with aromatic spices",
+    image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 4, 
-    name: "Mediterranean Salad", 
-    description: "Fresh salad with feta, olives, and vinaigrette",
-    image: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=800&q=80"
+    name: "Dal Makhani", 
+    description: "Creamy black lentils cooked overnight",
+    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80"
   },
+  { 
+    id: 5, 
+    name: "Samosa", 
+    description: "Crispy pastry with spiced potato filling",
+    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 6, 
+    name: "Palak Paneer", 
+    description: "Cottage cheese in spinach gravy",
+    image: "https://images.unsplash.com/photo-1618449840665-9ed506d73a34?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 7, 
+    name: "Chole Bhature", 
+    description: "Spiced chickpeas with fried bread",
+    image: "https://images.unsplash.com/photo-1626132647523-66c6bc3f6d2f?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 8, 
+    name: "Dosa", 
+    description: "Crispy rice crepe with potato filling",
+    image: "https://images.unsplash.com/photo-1625398407796-82650a8c9285?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 9, 
+    name: "Gulab Jamun", 
+    description: "Sweet milk dumplings in sugar syrup",
+    image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80"
+  },
+  { 
+    id: 10, 
+    name: "Tandoori Roti", 
+    description: "Whole wheat bread baked in clay oven",
+    image: "https://images.unsplash.com/photo-1626132600068-49c1f1a6c3c8?auto=format&fit=crop&w=800&q=80"
+  }
 ];
 
 const Home = () => {
@@ -39,11 +75,9 @@ const Home = () => {
   const { toast } = useToast();
   const [recommendations] = useState(mockRecommendations);
 
-  // Check authentication on page load
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      console.log("Checking user session:", session);
       if (!session) {
         navigate("/");
       }
@@ -51,33 +85,11 @@ const Home = () => {
     checkUser();
   }, [navigate]);
 
-  // Fetch user's orders
-  const { data: orders } = useQuery({
-    queryKey: ['orders'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error("Error fetching orders:", error);
-        throw error;
-      }
-      
-      return data;
-    },
-  });
-
   const handleOrder = async (foodItem: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        console.log("No user session found");
-        return;
-      }
+      if (!session?.user) return;
 
-      console.log("Placing order for:", foodItem);
       const { error } = await supabase
         .from('orders')
         .insert([{ food_item: foodItem, user_id: session.user.id }]);
@@ -105,54 +117,46 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Recommended for You</h1>
-          <Button variant="outline" onClick={handleSignOut}>
-            Sign Out
-          </Button>
+          <h1 className="text-2xl font-bold">Indian Cuisine</h1>
+          <div className="flex gap-4">
+            <Button 
+              onClick={() => navigate("/recent-orders")}
+              className="flex items-center gap-2"
+            >
+              <History className="h-4 w-4" />
+              Recent Orders
+            </Button>
+            <Button variant="outline" onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {recommendations.map((item) => (
-            <Card key={item.id} className="overflow-hidden">
-              <div className="relative h-48 w-full">
+            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="relative h-40 w-full">
                 <img 
                   src={item.image} 
                   alt={item.name}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
-              <CardHeader>
-                <CardTitle>{item.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">{item.description}</p>
-                <Button onClick={() => handleOrder(item.name)}>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">{item.name}</h3>
+                <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+                <Button 
+                  onClick={() => handleOrder(item.name)}
+                  className="w-full"
+                >
                   Order Now
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
-
-        {orders && orders.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-xl font-semibold mb-4">Your Recent Orders</h2>
-            <div className="space-y-2">
-              {orders.map((order) => (
-                <Card key={order.id}>
-                  <CardContent className="py-4">
-                    <p>{order.food_item}</p>
-                    <p className="text-sm text-gray-500">
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
