@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { History, LogOut } from "lucide-react";
 
+// Updated food items with verified working images
 const mockRecommendations = [
   { 
     id: 1, 
@@ -41,7 +42,7 @@ const mockRecommendations = [
     id: 6, 
     name: "Palak Paneer", 
     description: "Cottage cheese in spinach gravy",
-    image: "https://images.unsplash.com/photo-1618449840665-9ed506d73a34?auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 7, 
@@ -59,13 +60,13 @@ const mockRecommendations = [
     id: 9, 
     name: "Gulab Jamun", 
     description: "Sweet milk dumplings in sugar syrup",
-    image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1582716401301-b2407dc7563d?auto=format&fit=crop&w=800&q=80"
   },
   { 
     id: 10, 
     name: "Tandoori Roti", 
     description: "Whole wheat bread baked in clay oven",
-    image: "https://images.unsplash.com/photo-1626132600068-49c1f1a6c3c8?auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80"
   }
 ];
 
@@ -117,26 +118,26 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* AppBar */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
+      <div className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
             <h1 className="text-2xl font-bold text-primary">Food Buddy</h1>
-            <div className="flex gap-4">
+            <div className="flex gap-2 sm:gap-4">
               <Button 
                 variant="outline"
                 onClick={() => navigate("/recent-orders")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-sm sm:text-base"
               >
                 <History className="h-4 w-4" />
-                Recent Orders
+                <span className="hidden sm:inline">Recent Orders</span>
               </Button>
               <Button 
                 variant="outline"
                 onClick={handleSignOut}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-sm sm:text-base"
               >
                 <LogOut className="h-4 w-4" />
-                Sign Out
+                <span className="hidden sm:inline">Sign Out</span>
               </Button>
             </div>
           </div>
@@ -144,23 +145,30 @@ const Home: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {recommendations.map((item) => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative h-40 w-full">
+            <Card 
+              key={item.id} 
+              className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col"
+            >
+              <div className="relative h-48 w-full">
                 <img 
                   src={item.image} 
                   alt={item.name}
                   className="absolute inset-0 w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80";
+                  }}
                 />
               </div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold mb-1">{item.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">{item.description}</p>
+              <CardContent className="p-4 flex-1 flex flex-col">
+                <h3 className="font-semibold text-lg mb-1">{item.name}</h3>
+                <p className="text-sm text-gray-600 mb-4 flex-1">{item.description}</p>
                 <Button 
                   onClick={() => handleOrder(item.name)}
-                  className="w-full"
+                  className="w-full mt-auto"
                 >
                   Order Now
                 </Button>
